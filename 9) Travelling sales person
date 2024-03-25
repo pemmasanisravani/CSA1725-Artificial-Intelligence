@@ -1,0 +1,47 @@
+import sys
+
+class TravelingSalesman:
+    def __init__(self, graph):
+        self.graph = graph
+        self.num_cities = len(graph)
+
+    def nearest_neighbor(self, start_city):
+        visited = [False] * self.num_cities
+        path = [start_city]
+        total_distance = 0
+
+        visited[start_city] = True
+
+        for _ in range(self.num_cities - 1):
+            min_dist = sys.maxsize
+            nearest_city = None
+            current_city = path[-1]
+
+            for neighbor_city in range(self.num_cities):
+                if not visited[neighbor_city] and self.graph[current_city][neighbor_city] < min_dist:
+                    min_dist = self.graph[current_city][neighbor_city]
+                    nearest_city = neighbor_city
+
+            path.append(nearest_city)
+            visited[nearest_city] = True
+            total_distance += min_dist
+
+        # Add the distance from the last city back to the starting city
+        total_distance += self.graph[path[-1]][start_city]
+
+        return path, total_distance
+
+# Example usage:
+graph = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+
+tsp_solver = TravelingSalesman(graph)
+start_city = 0
+path, total_distance = tsp_solver.nearest_neighbor(start_city)
+
+print("Shortest path:", path)
+print("Total distance:", total_distance)
