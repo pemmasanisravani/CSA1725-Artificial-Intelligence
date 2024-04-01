@@ -44,3 +44,23 @@ s = 6
 t = 1
 
 
+
+from itertools import permutations
+
+puzzle = "roads + cross = danger"
+words = puzzle.split()
+unique_letters = set("".join(words))
+
+for perm in permutations(range(10), len(unique_letters)):
+    digit_map = {letter: digit for letter, digit in zip(unique_letters, perm)}
+    
+    if all(digit_map[word[0]] != 0 for word in words):
+        expression = " + ".join("".join(str(digit_map[letter]) for letter in word) for word in words[:-1])
+        if eval(expression) == int("".join(str(digit_map[letter]) for letter in words[-1])):
+            print("Solution found:")
+            for letter, digit in digit_map.items():
+                print(f"{letter}: {digit}")
+            break
+else:
+    print("No solution found.")
+
